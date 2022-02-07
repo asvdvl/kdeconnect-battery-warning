@@ -10,10 +10,10 @@ battery_percentage=$(qdbus org.kde.kdeconnect.daemon /modules/kdeconnect/devices
 
 if [ "$battery_percentage " -lt "$LOW_BATTERY_PERCENTAGE" ] && [ $is_charging = "false" ] && [ "$battery_percentage" -gt 1 ]
 then
-	notify-send -u low -t 4000 -c device --app-name="KDE Connect" -i battery "$device_name" "Podłącz telefon pod ładowarkę. Poziom baterii: $battery_percentage %"
+	notify-send -u low -t 4000 -c device --app-name="KDE Connect" -i battery "$device_name" "Connect the phone to the charger. Battery level: $battery_percentage %"
 fi
 
 if [ "$battery_percentage" -eq 100 ] && [ "$is_charging" ]
 then
-	notify-send -u low -t 4000 -c device --app-name="KDE Connect" -i battery "$device_name" "Bateria naładowana."
+	notify-send -u low -t 4000 -c device --app-name="KDE Connect" -i battery "$device_name" "Battery fully charged."
 fi
