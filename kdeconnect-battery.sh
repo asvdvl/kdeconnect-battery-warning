@@ -1,5 +1,11 @@
 #!/usr/bin/sh
 
+# No need to display notification if screen is locked
+SCREEN_LOCKED=$(gdbus call --session --dest org.freedesktop.ScreenSaver --object-path /org/freedesktop/ScreenSaver --method org.freedesktop.ScreenSaver.GetActive | grep -q "true" && echo 1 || echo 0)
+if [[ "$SCREEN_LOCKED" == "1" ]]; then
+    exit 0
+fi
+
 # Obtain your device ID: kdeconnect-cli --list-devices
 DEVICE_ID=d97803a897b59e47
 LOW_BATTERY_PERCENTAGE=70
