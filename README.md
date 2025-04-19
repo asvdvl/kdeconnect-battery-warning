@@ -22,7 +22,10 @@ And if you want - write your own battery percentage level, when you want to get 
 
 # How i can use that?
 
-Put script in /usr/local/bin and bind command below to keyboard shortcut via "own shortcuts". I use "PAUSE" button.
+First place the script somewhere like `/usr/local/bin/` or your home directory if you can run it as a user
+
+### Crontab way:
+Bind command below to keyboard shortcut via "own shortcuts". I use "PAUSE" button.
 
 `sh /usr/local/bin/kdeconnect-battery.sh`
 
@@ -31,4 +34,39 @@ If you want to get this work with cron (i don't know to be honest how run notify
 `*/1 * * * * your_username export DISPLAY=:0;xdotool key 0xff13` - Every minute click PAUSE and run script.
 
 
-Tested on Xiaomi Redmi Note 8 Pro & EndeavourOS 5.15.10-arch1-1
+Tested on Xiaomi Redmi Note 8 Pro & EndeavourOS 5.15.10-arch1-1 & Samsung Galaxy A11
+
+### Systemd way:
+
+1. Edit the service file `systemctl --user --force --full edit kdeconnect-battery.service` and paste the following lines there:
+```
+[Unit]
+Description=KDE Connect Battery Notification
+
+[Service]
+Type=oneshot
+ExecStart=<PATH>/kdeconnect-battery.sh
+
+[Install]
+WantedBy=default.target
+```
+replace `<PATH>` with the path to the script
+
+2. Edit the timer file to automatically start the service at certain intervals `systemctl --user --force --full edit kdeconnect-battery.timer` and insert the following lines there:
+```
+[Unit]
+Description=Run KDE Connect Battery Check periodically
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target
+```
+In this case, `OnUnitActiveSec` is the period with which the check will be carried out, you can change it at your discretion
+
+And finally, start the service:
+```
+systemctl --user enable --now kdeconnect-battery.timer
+```
